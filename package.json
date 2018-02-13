@@ -1,0 +1,20 @@
+{
+  "name": "izit-js",
+  "version": "1.0.0a",
+  "description": "Micro javascript validation lib",
+  "author": "JuMastro <mastromonaco.julien@gmail.com>",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JuMastro/izit-js.git"
+  },
+  "homepage": "https://github.com/JuMastro/izit-js",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 5.5.0"
+  }
+}
