@@ -61,6 +61,32 @@ describe('Number', () => {
     assert.equal(IzitNumber(test.object).float().hasErrors(), true)
   })
 
+  it('is min', () => {
+    assert.equal(IzitNumber(test.int).min(test.int + 1).hasErrors(), true)
+    assert.equal(IzitNumber(test.float).min(test.float - 0.1).hasErrors(), false)
+    assert.equal(IzitNumber(test.bigFloat).min(test.bigFloat - 100).hasErrors(), false)
+    assert.equal(IzitNumber(test.zero).min(-1).hasErrors(), false)
+    assert.equal(IzitNumber(test.neg).min(test.neg + 1).hasErrors(), true)
+    assert.equal(IzitNumber(test.negFloat).min(test.negFloat - 0.55558).hasErrors(), false)
+    assert.equal(IzitNumber(test.negLongFloat).min(test.negLongFloat - 14141.745764576).hasErrors(), false)
+    assert.equal(IzitNumber(test.array).min(0).hasErrors(), true)
+    assert.equal(IzitNumber(test.string).min(0).hasErrors(), true)
+    assert.equal(IzitNumber(test.object).min(0).hasErrors(), true)
+  })
+
+  it('is max', () => {
+    assert.equal(IzitNumber(test.int).max(test.int + 1).hasErrors(), false)
+    assert.equal(IzitNumber(test.float).max(test.float - 0.1).hasErrors(), true)
+    assert.equal(IzitNumber(test.bigFloat).max(test.bigFloat - 100).hasErrors(), true)
+    assert.equal(IzitNumber(test.zero).max(-1).hasErrors(), true)
+    assert.equal(IzitNumber(test.neg).max(test.neg + 1).hasErrors(), false)
+    assert.equal(IzitNumber(test.negFloat).max(test.negFloat - 0.55558).hasErrors(), true)
+    assert.equal(IzitNumber(test.negLongFloat).max(test.negLongFloat - 14141.745764576).hasErrors(), true)
+    assert.equal(IzitNumber(test.array).max(0).hasErrors(), true)
+    assert.equal(IzitNumber(test.string).max(0).hasErrors(), true)
+    assert.equal(IzitNumber(test.object).max(0).hasErrors(), true)
+  })
+
   it('is precise', () => {
     assert.equal(IzitNumber(test.int).precision(test.int + 10, 10).hasErrors(), false)
     assert.equal(IzitNumber(test.int).precision(test.int - 10, 10).hasErrors(), false)

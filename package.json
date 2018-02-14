@@ -5,7 +5,7 @@
   "author": "JuMastro <mastromonaco.julien@gmail.com>",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test/types"
   },
   "repository": {
     "type": "git",
