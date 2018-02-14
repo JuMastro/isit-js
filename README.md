@@ -1,4 +1,6 @@
 # IzitJS
+[![GitHub release](https://img.shields.io/github/release/jumastro/izit-js.svg)]()
+[![Github file size](https://img.shields.io/github/size/jumastro/izit-js/dist/izit.min.js.svg)]()
 
 IzitJS is micro NodeJS data validator
 
