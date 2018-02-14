@@ -122,6 +122,27 @@ describe('String', () => {
     assert.equal(IzitString('tèst-42.com').url().hasErrors(), true)
   })
 
+  it('is ip', () => {
+    assert.equal(IzitString('199.199.0.0').ip().hasErrors(), false)
+    assert.equal(IzitString('122.124.9.9').ip().hasErrors(), false)
+    assert.equal(IzitString('199.199.10.0').ip().hasErrors(), false)
+    assert.equal(IzitString('199.199.10.10').ip().hasErrors(), false)
+    assert.equal(IzitString('119.199.110.110').ip().hasErrors(), false)
+    assert.equal(IzitString('1919.199.0.0').ip().hasErrors(), true)
+    assert.equal(IzitString('199.1919.0.0').ip().hasErrors(), true)
+    assert.equal(IzitString('191.199.0.0/').ip().hasErrors(), true)
+    assert.equal(IzitString('/199.199.0.0').ip().hasErrors(), true)
+    assert.equal(IzitString('199.199.000.100').ip().hasErrors(), true)
+    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ip().hasErrors(), false)
+    assert.equal(IzitString('1001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), false)
+    assert.equal(IzitString('8001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), false)
+    assert.equal(IzitString('é001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), true)
+    assert.equal(IzitString('1001:0db8:85"3:0000:0000:4a6e:0710:1992').ip().hasErrors(), true)
+    assert.equal(IzitString('1001:0db8:85a3:0000_0000:4a6e:0710:1992').ip().hasErrors(), true)
+    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370-7334').ip().hasErrors(), true)
+    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ip().hasErrors(), true)
+  })
+
   it('is ipv4', () => {
     assert.equal(IzitString('199.199.0.0').ipv4().hasErrors(), false)
     assert.equal(IzitString('122.124.9.9').ipv4().hasErrors(), false)
@@ -133,6 +154,7 @@ describe('String', () => {
     assert.equal(IzitString('191.199.0.0/').ipv4().hasErrors(), true)
     assert.equal(IzitString('/199.199.0.0').ipv4().hasErrors(), true)
     assert.equal(IzitString('199.199.000.100').ipv4().hasErrors(), true)
+    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ipv4().hasErrors(), true)
   })
 
   it('is ipv6', () => {
