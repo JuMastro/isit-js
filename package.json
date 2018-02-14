@@ -1,7 +1,7 @@
 {
   "name": "izit-js",
   "version": "1.0.0a",
-  "description": "Micro javascript validation lib",
+  "description": "IzitJS is micro NodeJS data validator",
   "author": "JuMastro <mastromonaco.julien@gmail.com>",
   "main": "lib/index.js",
   "scripts": {
