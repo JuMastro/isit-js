@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/jumastro/izit-js.svg)]()
 
-IzitJS is micro NodeJS data validator
+IzitJS is nodejs micro data validator
 
 ## Install 
 ```bash
@@ -15,12 +15,13 @@ npm install izit-js --save
 const IzitJS = require('izit-js')
 
 // Build your test
-const test = IzitJS('198.0.0.1').string().min(5).max(20).ipv6()
+const test = IzitJS('HelloWorld!').string().min(32).max(64)
 
-// Errors handling : Error are detected it need to be an ipv6
+// Errors handling : Error is detected it need to be longer than 32
 if (test.hasErrors()) {
   console.log(test.getErrors())
 }
+
 ```
 
 ## API
@@ -62,5 +63,6 @@ if (test.hasErrors()) {
 - ```izitString.hostname()``` - is hostname
 - ```izitString.url()``` - is url
 - ```izitString.ip()``` - is ipv4 or ipv6
-- ```izitString.ipv4()``` - is ipv4 
+- ```izitString.ipv4()``` - is ipv4
 - ```izitString.ipv6()``` - is ipv6
+- ```izitString.equal(equality)``` - is equal to equality

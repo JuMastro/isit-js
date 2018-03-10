@@ -168,4 +168,14 @@ describe('String', () => {
     assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ipv6().hasErrors(), true)
     assert.equal(IzitString('199.199.0.0').ipv6().hasErrors(), true)
   })
+
+  it('is equal', () => {
+    assert.equal(IzitString('aaa').equal('aaa').hasErrors(), false)
+    assert.equal(IzitString('123').equal('123').hasErrors(), false)
+    assert.equal(IzitString('1a2b3c').equal('1a2b3c').hasErrors(), false)
+    assert.equal(IzitString('zzzz').equal('zzz').hasErrors(), true)
+    assert.equal(IzitString('yyyy').equal('yyyz').hasErrors(), true)
+    assert.equal(IzitString('aaa').equal(['aaa']).hasErrors(), true)
+    assert.equal(IzitString('aaa').equal({ aaa: 'aaa' }).hasErrors(), true)
+  })
 })
