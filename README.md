@@ -37,17 +37,23 @@ if (test.hasErrors()) {
 - ```izitBoolean.rtrue()``` - is real true
 - ```izitBoolean.rfalse()``` - is real false
 
+### Float
+- ```izitFloat.float()``` - is float
+- ```izitFloat.min(value)``` - is greater than value
+- ```izitFloat.max(value)``` - is lower than value
+- ```izitFloat.precision(limit, precision)``` - is lower than limit + precision & greater than limit - precision
+- ```izitFloat.positive()``` - is positive
+- ```izitFloat.negative()``` - is negative
+- ```izitInteger.zero()``` - is equal to zero
 
-### Number
-- ```izitNumber.number()``` - is numeric
-- ```izitNumber.integer()``` - is integer
-- ```izitNumber.float()``` - is float
-- ```izitNumber.min(value)``` - is greater than value
-- ```izitNumber.max(value)``` - is lower than value
-- ```izitNumber.precision(limit, precision)``` - is lower than limit + precision & greater than limit
-- ```izitNumber.positive()``` - is positive
-- ```izitNumber.negative()``` - is negative
-- ```izitNumber.zero()``` - is equal to zero
+### Integer
+- ```izitInteger.integer()``` - is integer
+- ```izitInteger.min(value)``` - is greater than value
+- ```izitInteger.max(value)``` - is lower than value
+- ```izitInteger.precision(limit, precision)``` - is lower than limit + precision & greater than limit - precision
+- ```izitInteger.positive()``` - is positive
+- ```izitInteger.negative()``` - is negative
+- ```izitInteger.zero()``` - is equal to zero
 
 ### Object
 - ```izitObject.object()``` - is object
