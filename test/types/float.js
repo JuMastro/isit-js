@@ -97,6 +97,20 @@ describe('Float', () => {
     assert.equal(IzitFloat(0).zero().hasErrors(), false)
   })
 
+  it('is maxdecimal', () => {
+    assert.equal(IzitFloat(test.float).maxdecimal(4).hasErrors(), false)
+    assert.equal(IzitFloat(test.float).maxdecimal(3).hasErrors(), true)
+    assert.equal(IzitFloat(test.zero).maxdecimal(1).hasErrors(), true)
+    assert.equal(IzitFloat(test.int).maxdecimal(1).hasErrors(), true)
+  })
+
+  it('is mindecimal', () => {
+    assert.equal(IzitFloat(test.float).mindecimal(2).hasErrors(), false)
+    assert.equal(IzitFloat(test.float).mindecimal(5).hasErrors(), true)
+    assert.equal(IzitFloat(test.zero).mindecimal(1).hasErrors(), true)
+    assert.equal(IzitFloat(test.int).mindecimal(1).hasErrors(), true)
+  })
+
   it('is mixed', () => {
     assert.equal(IzitFloat(test.float).min(1).max(test.float).precision(test.float - 10.858, test.float - 10.858).positive().hasErrors(), false)
     assert.equal(IzitFloat(test.negFloat).min(test.negFloat).negative().hasErrors(), false)

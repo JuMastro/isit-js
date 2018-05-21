@@ -44,7 +44,9 @@ if (test.hasErrors()) {
 - ```izitFloat.precision(limit, precision)``` - is lower than limit + precision & greater than limit - precision
 - ```izitFloat.positive()``` - is positive
 - ```izitFloat.negative()``` - is negative
-- ```izitInteger.zero()``` - is equal to zero
+- ```izitFloat.zero()``` - is equal to zero
+- ```izitFloat.mindecimal(min)``` - Min nbr of decimals
+- ```izitFloat.maxdecimal(max)``` - Max nbr of decimals
 
 ### Integer
 - ```izitInteger.integer()``` - is integer
