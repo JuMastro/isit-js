@@ -6,7 +6,7 @@ const IzitFloat = require('../../lib/types/float.js')
 const test = {
   int: 12550,
   float: 1005.2458,
-  bigFloat: 2173244545675.45764457456159,
+  bigFloat: 75.45764457456159,
   zero: 0,
   long: 1764576459489784754675197849,
   neg: -12550,
@@ -33,9 +33,12 @@ describe('Float', () => {
   })
 
   it('is min', () => {
+    assert.equal(IzitFloat(test.float).min(1).hasErrors(), false)
+    assert.equal(IzitFloat(test.float).min(0.00000000001).hasErrors(), false)
     assert.equal(IzitFloat(test.float).min(test.float - 0.1).hasErrors(), false)
-    assert.equal(IzitFloat(test.bigFloat).min(test.bigFloat - 100).hasErrors(), false)
-    assert.equal(IzitFloat(test.negFloat).min(test.negFloat - 0.55558).hasErrors(), false)
+    assert.equal(IzitFloat(test.negFloat).min(test.negFloat - 0.555586457645).hasErrors(), false)
+    assert.equal(IzitFloat(test.bigFloat).min(test.bigFloat).hasErrors(), false)
+    assert.equal(IzitFloat(test.bigFloat).min(test.bigFloat + 0.0000000000005).hasErrors(), true)
     assert.equal(IzitFloat(test.negLongFloat).min(test.negLongFloat - 14141.745764576).hasErrors(), false)
     assert.equal(IzitFloat(test.array).min(0).hasErrors(), true)
     assert.equal(IzitFloat(test.string).min(0).hasErrors(), true)
@@ -46,6 +49,7 @@ describe('Float', () => {
     assert.equal(IzitFloat(test.float).max(test.float - 0.1).hasErrors(), true)
     assert.equal(IzitFloat(test.bigFloat).max(test.bigFloat - 100).hasErrors(), true)
     assert.equal(IzitFloat(test.negFloat).max(test.negFloat - 0.55558).hasErrors(), true)
+    assert.equal(IzitFloat(test.bigFloat).max(test.bigFloat - 0.0000000000005).hasErrors(), true)
     assert.equal(IzitFloat(test.negLongFloat).max(test.negLongFloat - 14141.745764576).hasErrors(), true)
     assert.equal(IzitFloat(test.array).max(0).hasErrors(), true)
     assert.equal(IzitFloat(test.string).max(0).hasErrors(), true)
@@ -56,6 +60,7 @@ describe('Float', () => {
     assert.equal(IzitFloat(test.float).precision(test.float + 100, 100).hasErrors(), false)
     assert.equal(IzitFloat(test.negFloat).precision(test.negFloat + 100.4455, 100.554).hasErrors(), false)
     assert.equal(IzitFloat(test.negLongFloat).precision(test.negLongFloat + 17457600.754765, 17457600.754765).hasErrors(), false)
+    assert.equal(IzitFloat(test.bigFloat).precision(test.bigFloat - 0.00000000000002, 0.00000000000001).hasErrors(), false)
     assert.equal(IzitFloat(test.negLongFloat).precision(test.negLongFloat + 17457600.754778787, 17457600).hasErrors(), true)
   })
 
@@ -119,7 +124,7 @@ describe('Float', () => {
   })
 
   it('is mixed', () => {
-    assert.equal(IzitFloat(test.float).min(1).max(test.float).precision(test.float - 10.858, test.float - 10.858).positive().hasErrors(), false)
+    assert.equal(IzitFloat(test.float).min(1).max(test.float).precision(test.float, 0.00000005).positive().hasErrors(), false)
     assert.equal(IzitFloat(test.negFloat).min(test.negFloat).negative().hasErrors(), false)
     assert.equal(IzitFloat(test.negFloat).min(test.negFloat + 1).hasErrors(), true)
     assert.equal(IzitFloat(test.negFloat).negative().min(test.negFloat).precision(test.negFloat - 0.576457, 0.576457).hasErrors(), false)
