@@ -3,179 +3,281 @@
 const IzitString = require('../../lib/types/string')
 const assert = require('chai').assert
 
-const test = {
-  array: ['Is', 'Medium', 'Array', 'Guys', '!', 'id'],
-  string: 'id Is a random string write to do tests!',
+const tests = {
   empty: '',
+  string: 'id Is a random string write to do tests!',
   alphanum: 'fds654FDS65qs4dqSD98v7xcqSDQ6QSDFDqs6sd',
   all: 'é6&4"(6é&é"é"65qs6:;!?*Ù!azës%q£é&$&²=)&(',
-  nbString: '124545.04215',
-  object: { id: 'is_id', value: 'is_value', list: ['test', 'test'] },
-  int: 12550,
-  float: 1005.2458
+  nbString: '125.045'
 }
 
-describe('String', () => {
-  it('is string', () => {
-    assert.equal(IzitString(test.array).hasErrors(), true)
-    assert.equal(IzitString(test.string).hasErrors(), false)
-    assert.equal(IzitString(test.empty).hasErrors(), false)
-    assert.equal(IzitString(test.nbString).hasErrors(), false)
-    assert.equal(IzitString(test.object).hasErrors(), true)
-    assert.equal(IzitString(JSON.stringify(test.object)).hasErrors(), false)
-    assert.equal(IzitString(test.int).hasErrors(), true)
-    assert.equal(IzitString(test.float).hasErrors(), true)
-    assert.equal(IzitString(true).hasErrors(), true)
+describe('IzitString', () => {
+  it('.string()', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.empty).hasErrors())
+    assert.isFalse(IzitString(tests.string).hasErrors())
+    assert.isFalse(IzitString(tests.alphanum).hasErrors())
+    assert.isFalse(IzitString(tests.all).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).hasErrors())
+    assert.isFalse(IzitString(JSON.stringify(['Is', 'Medium', 'Array', 'Guys', '!', 'id'])).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(['Is', 'Medium', 'Array', 'Guys', '!', 'id']).hasErrors())
+    assert.isTrue(IzitString({ id: 'is_id', value: 'is_value', list: ['test', 'test'] }).hasErrors())
+    assert.isTrue(IzitString(12550).hasErrors())
+    assert.isTrue(IzitString(1005.2458).hasErrors())
+    assert.isTrue(IzitString(true).hasErrors())
   })
 
-  it('is min length', () => {
-    assert.equal(IzitString(test.string).min(20).hasErrors(), false)
-    assert.equal(IzitString(test.empty).min(0).hasErrors(), false)
-    assert.equal(IzitString(test.empty).min(1).hasErrors(), true)
-    assert.equal(IzitString(test.nbString).min(5).hasErrors(), false)
-    assert.equal(IzitString(test.nbString).min(100).hasErrors(), true)
-    assert.equal(IzitString(JSON.stringify(test.object)).min(10).hasErrors(), false)
-    assert.equal(IzitString(test.array).min(0).hasErrors(), true)
-    assert.equal(IzitString(test.object).min(0).hasErrors(), true)
-    assert.equal(IzitString(test.int).min(0).hasErrors(), true)
-    assert.equal(IzitString(test.float).min(0).hasErrors(), true)
-    assert.equal(IzitString(true).min(0).hasErrors(), true)
+  it('.minlength(length)', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.empty).minlength(0).hasErrors())
+    assert.isFalse(IzitString(tests.string).minlength(40).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).minlength(7).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).minlength(2).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(tests.empty).minlength(1).hasErrors())
+    assert.isTrue(IzitString(tests.string).minlength(41).hasErrors())
+    assert.isTrue(IzitString(tests.nbString).minlength(8).hasErrors())
   })
 
-  it('is max length', () => {
-    assert.equal(IzitString(test.string).max(100).hasErrors(), false)
-    assert.equal(IzitString(test.empty).max(0).hasErrors(), false)
-    assert.equal(IzitString(test.empty).max(1).hasErrors(), false)
-    assert.equal(IzitString(test.nbString).max(999999).hasErrors(), false)
-    assert.equal(IzitString(test.nbString).max(8).hasErrors(), true)
-    assert.equal(IzitString(JSON.stringify(test.object)).max(10).hasErrors(), true)
-    assert.equal(IzitString(test.array).max(99999).hasErrors(), true)
-    assert.equal(IzitString(test.object).max(99999).hasErrors(), true)
-    assert.equal(IzitString(test.int).max(99999).hasErrors(), true)
-    assert.equal(IzitString(test.float).max(99999).hasErrors(), true)
-    assert.equal(IzitString(true).max(99999).hasErrors(), true)
+  it('.maxlength(length)', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.empty).maxlength(0).hasErrors())
+    assert.isFalse(IzitString(tests.string).maxlength(40).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).maxlength(7).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).maxlength(10).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(tests.string).maxlength(32).hasErrors())
+    assert.isTrue(IzitString(tests.nbString).maxlength(5).hasErrors())
   })
 
-  it('is not empty', () => {
-    assert.equal(IzitString(test.string).notempty().hasErrors(), false)
-    assert.equal(IzitString(test.empty).notempty().hasErrors(), true)
-    assert.equal(IzitString(test.alphanum).notempty().hasErrors(), false)
-    assert.equal(IzitString(test.all).notempty().hasErrors(), false)
-    assert.equal(IzitString(test.nbString).notempty().hasErrors(), false)
-    assert.equal(IzitString(JSON.stringify(test.object)).notempty().hasErrors(), false)
+  it('.length(length)', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.empty).length(0).hasErrors())
+    assert.isFalse(IzitString(tests.string).length(40).hasErrors())
+    assert.isFalse(IzitString(tests.nbString).length(7).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(tests.empty).length(1).hasErrors())
+    assert.isTrue(IzitString(tests.string).length(41).hasErrors())
+    assert.isTrue(IzitString(tests.nbString).length(8).hasErrors())
   })
 
-  it('is alpha-numeric', () => {
-    assert.equal(IzitString(test.string).alphanum().hasErrors(), true)
-    assert.equal(IzitString(test.empty).alphanum().hasErrors(), true)
-    assert.equal(IzitString(test.alphanum).alphanum().hasErrors(), false)
-    assert.equal(IzitString(test.all).alphanum().hasErrors(), true)
-    assert.equal(IzitString(test.nbString).alphanum().hasErrors(), true)
-    assert.equal(IzitString(JSON.stringify(test.object)).alphanum().hasErrors(), true)
+  it('.notempty()', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.string).notempty().hasErrors())
+    assert.isFalse(IzitString(tests.alphanum).notempty().hasErrors())
+    assert.isFalse(IzitString(tests.all).notempty().hasErrors())
+    assert.isFalse(IzitString(tests.nbString).notempty().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(tests.empty).notempty().hasErrors())
   })
 
-  it('is email', () => {
-    assert.equal(IzitString('johndoe@test.com').email().hasErrors(), false)
-    assert.equal(IzitString('john-doe@test.com').email().hasErrors(), false)
-    assert.equal(IzitString('john-doe@te-st.com').email().hasErrors(), false)
-    assert.equal(IzitString('john-doe42@te-st.com').email().hasErrors(), false)
-    assert.equal(IzitString('john_doe-42@te-st.com').email().hasErrors(), false)
-    assert.equal(IzitString('jo.hn_doe-42@te-st.com').email().hasErrors(), false)
-    assert.equal(IzitString('jo.hn_doe-42@te-stcom').email().hasErrors(), true)
-    assert.equal(IzitString('jo.hn_doe-42te-st.com').email().hasErrors(), true)
-    assert.equal(IzitString('jo.hn_doe-42te-stcom').email().hasErrors(), true)
-    assert.equal(IzitString('johndoé@test.com').email().hasErrors(), false)
+  it('.alphanum()', () => {
+    // Valids
+    assert.isFalse(IzitString(tests.alphanum).alphanum().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString(tests.empty).alphanum().hasErrors())
+    assert.isTrue(IzitString(tests.string).alphanum().hasErrors())
+    assert.isTrue(IzitString(tests.all).alphanum().hasErrors())
+    assert.isTrue(IzitString(tests.nbString).alphanum().hasErrors())
   })
 
-  it('is hostname', () => {
-    assert.equal(IzitString('www.test42.com').hostname().hasErrors(), false)
-    assert.equal(IzitString('test42.com').hostname().hasErrors(), false)
-    assert.equal(IzitString('test42').hostname().hasErrors(), false)
-    assert.equal(IzitString('test-42').hostname().hasErrors(), false)
-    assert.equal(IzitString('tèst42').hostname().hasErrors(), true)
-    assert.equal(IzitString('test_42').hostname().hasErrors(), true)
-    assert.equal(IzitString('test=42').hostname().hasErrors(), true)
-    assert.equal(IzitString('test.com/pages').hostname().hasErrors(), true)
+  it('.lowercase()', () => {
+    // Valids
+    assert.isFalse(IzitString('helloworld').lowercase().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('HelloWorld').lowercase().hasErrors())
+    assert.isTrue(IzitString('hello world').lowercase().hasErrors())
+    assert.isTrue(IzitString('hello-world').lowercase().hasErrors())
+    assert.isTrue(IzitString('0').lowercase().hasErrors())
+    assert.isTrue(IzitString('').lowercase().hasErrors())
   })
 
-  it('is url', () => {
-    assert.equal(IzitString('ws://www.test-42.com').url().hasErrors(), false)
-    assert.equal(IzitString('ws://www.test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('ws://www.test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('http://www.test-42.com').url().hasErrors(), false)
-    assert.equal(IzitString('http://www.test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('http://www.test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('https://www.test-42.com').url().hasErrors(), false)
-    assert.equal(IzitString('https://www.test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('https://www.test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('ftp://www.test-42.com').url().hasErrors(), false)
-    assert.equal(IzitString('ftp://www.test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('ftp://www.test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('www.test-42.com').url().hasErrors(), false)
-    assert.equal(IzitString('www.test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('www.test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('test-42.com/pages').url().hasErrors(), false)
-    assert.equal(IzitString('test-42.com/pages?articles=10').url().hasErrors(), false)
-    assert.equal(IzitString('test-42.com/pages?articles=10&page=2').url().hasErrors(), false)
-    assert.equal(IzitString('test-42.com/pages?articles=10.test').url().hasErrors(), false)
-    assert.equal(IzitString('test-42/pages?articles=10').url().hasErrors(), true)
-    assert.equal(IzitString('tèst-42.com').url().hasErrors(), true)
+  it('.uppercase()', () => {
+    // Valids
+    assert.isFalse(IzitString('HELLOWORLD').uppercase().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('HelloWorld').uppercase().hasErrors())
+    assert.isTrue(IzitString('HELLO WORLD').uppercase().hasErrors())
+    assert.isTrue(IzitString('HELLO-WORLD').uppercase().hasErrors())
+    assert.isTrue(IzitString('0').uppercase().hasErrors())
+    assert.isTrue(IzitString('').uppercase().hasErrors())
   })
 
-  it('is ip', () => {
-    assert.equal(IzitString('199.199.0.0').ip().hasErrors(), false)
-    assert.equal(IzitString('122.124.9.9').ip().hasErrors(), false)
-    assert.equal(IzitString('199.199.10.0').ip().hasErrors(), false)
-    assert.equal(IzitString('199.199.10.10').ip().hasErrors(), false)
-    assert.equal(IzitString('119.199.110.110').ip().hasErrors(), false)
-    assert.equal(IzitString('1919.199.0.0').ip().hasErrors(), true)
-    assert.equal(IzitString('199.1919.0.0').ip().hasErrors(), true)
-    assert.equal(IzitString('191.199.0.0/').ip().hasErrors(), true)
-    assert.equal(IzitString('/199.199.0.0').ip().hasErrors(), true)
-    assert.equal(IzitString('199.199.000.100').ip().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ip().hasErrors(), false)
-    assert.equal(IzitString('1001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), false)
-    assert.equal(IzitString('8001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), false)
-    assert.equal(IzitString('é001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors(), true)
-    assert.equal(IzitString('1001:0db8:85"3:0000:0000:4a6e:0710:1992').ip().hasErrors(), true)
-    assert.equal(IzitString('1001:0db8:85a3:0000_0000:4a6e:0710:1992').ip().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370-7334').ip().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ip().hasErrors(), true)
+  it('.numeric()', () => {
+    // Valids
+    assert.isFalse(IzitString('122').numeric().hasErrors())
+    assert.isFalse(IzitString('122.4545').numeric().hasErrors())
+    assert.isFalse(IzitString('0').numeric().hasErrors())
+    assert.isFalse(IzitString('0.1014').numeric().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('HelloWorld').numeric().hasErrors())
+    assert.isTrue(IzitString('00.41.78.61.47').numeric().hasErrors())
+    assert.isTrue(IzitString('john56').numeric().hasErrors())
   })
 
-  it('is ipv4', () => {
-    assert.equal(IzitString('199.199.0.0').ipv4().hasErrors(), false)
-    assert.equal(IzitString('122.124.9.9').ipv4().hasErrors(), false)
-    assert.equal(IzitString('199.199.10.0').ipv4().hasErrors(), false)
-    assert.equal(IzitString('199.199.10.10').ipv4().hasErrors(), false)
-    assert.equal(IzitString('119.199.110.110').ipv4().hasErrors(), false)
-    assert.equal(IzitString('1919.199.0.0').ipv4().hasErrors(), true)
-    assert.equal(IzitString('199.1919.0.0').ipv4().hasErrors(), true)
-    assert.equal(IzitString('191.199.0.0/').ipv4().hasErrors(), true)
-    assert.equal(IzitString('/199.199.0.0').ipv4().hasErrors(), true)
-    assert.equal(IzitString('199.199.000.100').ipv4().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ipv4().hasErrors(), true)
+  it('.numinteger()', () => {
+    // Valids
+    assert.isFalse(IzitString('122').numinteger().hasErrors())
+    assert.isFalse(IzitString('1224545').numinteger().hasErrors())
+    assert.isFalse(IzitString('0').numinteger().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('HelloWorld').numinteger().hasErrors())
+    assert.isTrue(IzitString('00.41.78.61.47').numinteger().hasErrors())
+    assert.isTrue(IzitString('john56').numinteger().hasErrors())
+    assert.isTrue(IzitString('45.7878').numinteger().hasErrors())
+    assert.isTrue(IzitString('0.4545').numinteger().hasErrors())
   })
 
-  it('is ipv6', () => {
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ipv6().hasErrors(), false)
-    assert.equal(IzitString('1001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors(), false)
-    assert.equal(IzitString('8001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors(), false)
-    assert.equal(IzitString('é001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors(), true)
-    assert.equal(IzitString('1001:0db8:85"3:0000:0000:4a6e:0710:1992').ipv6().hasErrors(), true)
-    assert.equal(IzitString('1001:0db8:85a3:0000_0000:4a6e:0710:1992').ipv6().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370-7334').ipv6().hasErrors(), true)
-    assert.equal(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ipv6().hasErrors(), true)
-    assert.equal(IzitString('199.199.0.0').ipv6().hasErrors(), true)
+  it('.numfloat()', () => {
+    // Valids
+    assert.isFalse(IzitString('124452.4488').numfloat().hasErrors())
+    assert.isFalse(IzitString('1.22454524').numfloat().hasErrors())
+    assert.isFalse(IzitString('0.00045').numfloat().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('HelloWorld').numfloat().hasErrors())
+    assert.isTrue(IzitString('00.41.78.61.47').numfloat().hasErrors())
+    assert.isTrue(IzitString('john56').numfloat().hasErrors())
+    assert.isTrue(IzitString('457878').numfloat().hasErrors())
+    assert.isTrue(IzitString('1').numfloat().hasErrors())
   })
 
-  it('is equal', () => {
-    assert.equal(IzitString('aaa').equal('aaa').hasErrors(), false)
-    assert.equal(IzitString('123').equal('123').hasErrors(), false)
-    assert.equal(IzitString('1a2b3c').equal('1a2b3c').hasErrors(), false)
-    assert.equal(IzitString('zzzz').equal('zzz').hasErrors(), true)
-    assert.equal(IzitString('yyyy').equal('yyyz').hasErrors(), true)
-    assert.equal(IzitString('aaa').equal(['aaa']).hasErrors(), true)
-    assert.equal(IzitString('aaa').equal({ aaa: 'aaa' }).hasErrors(), true)
+  it('.email()', () => {
+    // Valids
+    assert.isFalse(IzitString('johndoe@test.com').email().hasErrors())
+    assert.isFalse(IzitString('john-doe@test.com').email().hasErrors())
+    assert.isFalse(IzitString('john-doe@te-st.com').email().hasErrors())
+    assert.isFalse(IzitString('john-doe42@te-st.com').email().hasErrors())
+    assert.isFalse(IzitString('john_doe-42@te-st.com').email().hasErrors())
+    assert.isFalse(IzitString('jo.hn_doe-42@te-st.com').email().hasErrors())
+    assert.isFalse(IzitString('johndoé@test.com').email().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('jo.hn_doe-42@te-stcom').email().hasErrors())
+    assert.isTrue(IzitString('jo.hn_doe-42te-st.com').email().hasErrors())
+    assert.isTrue(IzitString('jo.hn_doe-42te-stcom').email().hasErrors())
+  })
+
+  it('.hostname()', () => {
+    // Valids
+    assert.isFalse(IzitString('www.test42.com').hostname().hasErrors())
+    assert.isFalse(IzitString('test42.com').hostname().hasErrors())
+    assert.isFalse(IzitString('test42').hostname().hasErrors())
+    assert.isFalse(IzitString('test-42').hostname().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('tèst42').hostname().hasErrors())
+    assert.isTrue(IzitString('test_42').hostname().hasErrors())
+    assert.isTrue(IzitString('test=42').hostname().hasErrors())
+    assert.isTrue(IzitString('test.com/pages').hostname().hasErrors())
+  })
+
+  it('.url()', () => {
+    // Valids
+    assert.isFalse(IzitString('ws://www.test-42.com').url().hasErrors())
+    assert.isFalse(IzitString('ws://www.test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('ws://www.test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('http://www.test-42.com').url().hasErrors())
+    assert.isFalse(IzitString('http://www.test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('http://www.test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('https://www.test-42.com').url().hasErrors())
+    assert.isFalse(IzitString('https://www.test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('https://www.test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('ftp://www.test-42.com').url().hasErrors())
+    assert.isFalse(IzitString('ftp://www.test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('ftp://www.test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('www.test-42.com').url().hasErrors())
+    assert.isFalse(IzitString('www.test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('www.test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('test-42.com/pages').url().hasErrors())
+    assert.isFalse(IzitString('test-42.com/pages?articles=10').url().hasErrors())
+    assert.isFalse(IzitString('test-42.com/pages?articles=10&page=2').url().hasErrors())
+    assert.isFalse(IzitString('test-42.com/pages?articles=10.test').url().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('test-42/pages?articles=10').url().hasErrors())
+    assert.isTrue(IzitString('test@42').url().hasErrors())
+    assert.isTrue(IzitString('test-42|com').url().hasErrors())
+    assert.isTrue(IzitString('tèst-42.com').url().hasErrors())
+  })
+
+  it('.ip()', () => {
+    // Valids
+    assert.isFalse(IzitString('199.199.0.0').ip().hasErrors())
+    assert.isFalse(IzitString('122.124.9.9').ip().hasErrors())
+    assert.isFalse(IzitString('199.199.10.0').ip().hasErrors())
+    assert.isFalse(IzitString('199.199.10.10').ip().hasErrors())
+    assert.isFalse(IzitString('119.199.110.110').ip().hasErrors())
+    assert.isFalse(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ip().hasErrors())
+    assert.isFalse(IzitString('1001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors())
+    assert.isFalse(IzitString('8001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('1919.199.0.0').ip().hasErrors())
+    assert.isTrue(IzitString('199.1919.0.0').ip().hasErrors())
+    assert.isTrue(IzitString('191.199.0.0/').ip().hasErrors())
+    assert.isTrue(IzitString('/199.199.0.0').ip().hasErrors())
+    assert.isTrue(IzitString('199.199.000.100').ip().hasErrors())
+    assert.isTrue(IzitString('é001:0db8:85a3:0000:0000:4a6e:0710:1992').ip().hasErrors())
+    assert.isTrue(IzitString('1001:0db8:85"3:0000:0000:4a6e:0710:1992').ip().hasErrors())
+    assert.isTrue(IzitString('1001:0db8:85a3:0000_0000:4a6e:0710:1992').ip().hasErrors())
+    assert.isTrue(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370-7334').ip().hasErrors())
+    assert.isTrue(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ip().hasErrors())
+  })
+
+  it('.ipv4()', () => {
+    // Valids
+    assert.isFalse(IzitString('199.199.0.0').ipv4().hasErrors())
+    assert.isFalse(IzitString('122.124.9.9').ipv4().hasErrors())
+    assert.isFalse(IzitString('199.199.10.0').ipv4().hasErrors())
+    assert.isFalse(IzitString('199.199.10.10').ipv4().hasErrors())
+    assert.isFalse(IzitString('119.199.110.110').ipv4().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('1919.199.0.0').ipv4().hasErrors())
+    assert.isTrue(IzitString('199.1919.0.0').ipv4().hasErrors())
+    assert.isTrue(IzitString('191.199.0.0/').ipv4().hasErrors())
+    assert.isTrue(IzitString('/199.199.0.0').ipv4().hasErrors())
+    assert.isTrue(IzitString('199.199.000.100').ipv4().hasErrors())
+    assert.isTrue(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ipv4().hasErrors())
+  })
+
+  it('.ipv6()', () => {
+    // Valids
+    assert.isFalse(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ipv6().hasErrors())
+    assert.isFalse(IzitString('1001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors())
+    assert.isFalse(IzitString('8001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('é001:0db8:85a3:0000:0000:4a6e:0710:1992').ipv6().hasErrors())
+    assert.isTrue(IzitString('1001:0db8:85"3:0000:0000:4a6e:0710:1992').ipv6().hasErrors())
+    assert.isTrue(IzitString('1001:0db8:85a3:0000_0000:4a6e:0710:1992').ipv6().hasErrors())
+    assert.isTrue(IzitString('2001:0db8:85a3:0000:0000:8a2e:0370-7334').ipv6().hasErrors())
+    assert.isTrue(IzitString('2001:0db8:85a3:0000:0000:8a2e:03707334').ipv6().hasErrors())
+    assert.isTrue(IzitString('199.199.0.0').ipv6().hasErrors())
+  })
+
+  it('.equal()', () => {
+    // Valids
+    assert.isFalse(IzitString('aaa').equal('aaa').hasErrors())
+    assert.isFalse(IzitString('123').equal('123').hasErrors())
+    assert.isFalse(IzitString('1a2b3c').equal('1a2b3c').hasErrors())
+
+    // Errors
+    assert.isTrue(IzitString('zzzz').equal('zzz').hasErrors())
+    assert.isTrue(IzitString('yyyy').equal('yyyz').hasErrors())
+    assert.isTrue(IzitString('aaa').equal(['aaa']).hasErrors())
+    assert.isTrue(IzitString('aaa').equal({ aaa: 'aaa' }).hasErrors())
   })
 })

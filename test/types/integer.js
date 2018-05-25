@@ -3,98 +3,107 @@
 const assert = require('chai').assert
 const IzitInteger = require('../../lib/types/integer.js')
 
-const test = {
-  int: 12550,
-  float: 1005.2458,
+const tests = {
   zero: 0,
-  long: 1764576459489784754675197849,
+  int: 12550,
   neg: -12550,
-  array: ['Is', 'Medium', 'Array', 'Guys', '!'],
-  string: 'Is a random string write to do tests!',
-  object: { id: 'is_id', value: 'is_value', list: ['test', 'test'] }
+  long: 1764576459489784754675197849
 }
 
-describe('Integer', () => {
-  it('is integer', () => {
-    assert.equal(IzitInteger(test.int).integer().hasErrors(), false)
-    assert.equal(IzitInteger(test.float).integer().hasErrors(), true)
-    assert.equal(IzitInteger(test.zero).integer().hasErrors(), false)
-    assert.equal(IzitInteger(test.long).integer().hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).integer().hasErrors(), false)
-    assert.equal(IzitInteger(test.array).integer().hasErrors(), true)
-    assert.equal(IzitInteger(test.string).integer().hasErrors(), true)
-    assert.equal(IzitInteger(test.object).integer().hasErrors(), true)
-    assert.equal(IzitInteger(true).integer().hasErrors(), true)
+describe('IzitInteger', () => {
+  it('.integer()', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).hasErrors())
+    assert.isFalse(IzitInteger(tests.long).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(1005.2458).hasErrors())
+    assert.isTrue(IzitInteger(['Is', 'Medium', 'Array', 'Guys', '!']).hasErrors())
+    assert.isTrue(IzitInteger('Is a random string write to do tests!').hasErrors())
+    assert.isTrue(IzitInteger({ id: 'is_id', value: 'is_value', list: ['test', 'test'] }).hasErrors())
   })
 
-  it('is min', () => {
-    assert.equal(IzitInteger(test.int).min(test.int + 1).hasErrors(), true)
-    assert.equal(IzitInteger(test.zero).min(-1).hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).min(test.neg + 1).hasErrors(), true)
-    assert.equal(IzitInteger(test.array).min(0).hasErrors(), true)
-    assert.equal(IzitInteger(test.string).min(0).hasErrors(), true)
-    assert.equal(IzitInteger(test.object).min(0).hasErrors(), true)
+  it('.min(value)', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).min(0).hasErrors())
+    assert.isFalse(IzitInteger(tests.long).min(50000).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).min(-20000).hasErrors())
+    assert.isFalse(IzitInteger(tests.long).min(1000000).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.zero).min(1).hasErrors())
+    assert.isTrue(IzitInteger(tests.int).min(13000).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).min(-1500).hasErrors())
   })
 
-  it('is max', () => {
-    assert.equal(IzitInteger(test.int).max(test.int + 1).hasErrors(), false)
-    assert.equal(IzitInteger(test.float).max(test.float - 0.1).hasErrors(), true)
-    assert.equal(IzitInteger(test.zero).max(-1).hasErrors(), true)
-    assert.equal(IzitInteger(test.neg).max(test.neg + 1).hasErrors(), false)
-    assert.equal(IzitInteger(test.array).max(0).hasErrors(), true)
-    assert.equal(IzitInteger(test.string).max(0).hasErrors(), true)
-    assert.equal(IzitInteger(test.object).max(0).hasErrors(), true)
+  it('.max(value)', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).max(0).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).max(50000).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).max(0).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.zero).max(-10).hasErrors())
+    assert.isTrue(IzitInteger(tests.long).max(1000000).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).max(-150000).hasErrors())
   })
 
-  it('is precise', () => {
-    assert.equal(IzitInteger(test.int).precision(test.int + 10, 10).hasErrors(), false)
-    assert.equal(IzitInteger(test.int).precision(test.int - 10, 10).hasErrors(), false)
-    assert.equal(IzitInteger(test.zero).precision(test.zero + 100, 100).hasErrors(), false)
-    assert.equal(IzitInteger(test.zero).precision(test.zero - 100, 100).hasErrors(), false)
-    assert.equal(IzitInteger(test.long).precision(test.long + 10000, 10000).hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).precision(test.neg + 100, 100).hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).precision(test.neg - 100, 100).hasErrors(), false)
+  it('.precision(limit, range)', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).precision(0, 1).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).precision(10000, 10000).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).precision(-10000, 10000).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.zero).precision(-10, 1).hasErrors())
+    assert.isTrue(IzitInteger(tests.int).precision(15000, 500).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).precision(-10000, -5000).hasErrors())
   })
 
-  it('is positive', () => {
-    assert.equal(IzitInteger(test.int).positive().hasErrors(), false)
-    assert.equal(IzitInteger(test.zero).positive().hasErrors(), true)
-    assert.equal(IzitInteger(test.neg).positive().hasErrors(), true)
-    assert.equal(IzitInteger(test.long).positive().hasErrors(), false)
-    assert.equal(IzitInteger(test.array).positive().hasErrors(), true)
-    assert.equal(IzitInteger(test.string).positive().hasErrors(), true)
-    assert.equal(IzitInteger(test.object).positive().hasErrors(), true)
-    assert.equal(IzitInteger(true).positive().hasErrors(), true)
-    assert.equal(IzitInteger(false).positive().hasErrors(), true)
+  it('.positive()', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.int).positive().hasErrors())
+    assert.isFalse(IzitInteger(tests.long).positive().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.zero).positive().hasErrors())
+    assert.isTrue(IzitInteger(-0).positive().hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).positive().hasErrors())
   })
 
-  it('is negative', () => {
-    assert.equal(IzitInteger(test.int).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.float).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.zero).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.neg).negative().hasErrors(), false)
-    assert.equal(IzitInteger(test.long).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.array).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.string).negative().hasErrors(), true)
-    assert.equal(IzitInteger(test.object).negative().hasErrors(), true)
+  it('.negative()', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.neg).negative().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.int).negative().hasErrors())
+    assert.isTrue(IzitInteger(tests.long).negative().hasErrors())
+    assert.isTrue(IzitInteger(tests.zero).negative().hasErrors())
+    assert.isTrue(IzitInteger(-0).negative().hasErrors())
   })
 
-  it('is zero', () => {
-    assert.equal(IzitInteger(test.int).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.float).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.zero).zero().hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.negFloat).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.array).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.string).zero().hasErrors(), true)
-    assert.equal(IzitInteger(test.object).zero().hasErrors(), true)
-    assert.equal(IzitInteger(false).zero().hasErrors(), true)
-    assert.equal(IzitInteger(0).zero().hasErrors(), false)
+  it('.zero()', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).zero().hasErrors())
+    assert.isFalse(IzitInteger(-0).zero().hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.int).zero().hasErrors())
+    assert.isTrue(IzitInteger(tests.long).zero().hasErrors())
   })
 
-  it('is mixed', () => {
-    assert.equal(IzitInteger(test.int).min(1).max(test.int).precision(test.int + 10, test.int + 10).positive().hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).min(test.neg).max(0).negative().hasErrors(), false)
-    assert.equal(IzitInteger(test.neg).min(test.neg).max(0).positive().hasErrors(), true)
+  it('.equal(equality)', () => {
+    // Valids
+    assert.isFalse(IzitInteger(tests.zero).equal(0).hasErrors())
+    assert.isFalse(IzitInteger(tests.zero).equal(-0).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).equal(12550).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).equal(-12550).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitInteger(tests.int).equal(125501).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).equal(12550).hasErrors())
+    assert.isTrue(IzitInteger(tests.long).equal(0).hasErrors())
   })
 })

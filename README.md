@@ -17,9 +17,9 @@ const IzitJS = require('izit-js')
 // Build your test
 const test = IzitJS('HelloWorld!').string().min(32).max(64)
 
-// Errors handling : Error is detected it need to be longer than 32
+// Errors handling : Error is detected it need to be longer than 32.
 if (test.hasErrors()) {
-  console.log(test.getErrors())
+  return test.getErrors()
 }
 
 ```
@@ -28,9 +28,11 @@ if (test.hasErrors()) {
 
 ### Array
 - ```izitArray.array()``` - is array
-- ```izitArray.min(length)``` - is min length
-- ```izitArray.max(length)``` - is max length
-- ```izitArray.length(length)``` - length equal to
+- ```izitArray.minlength(length)``` - is min length
+- ```izitArray.maxlength(length)``` - is max length
+- ```izitArray.length(length)``` - is length equality
+- ```izitArray.hasvalue(value)``` - is include value
+- ```izitArray.equal(value)``` - is equal to value
 
 ### Boolean
 - ```izitBoolean.boolean()``` - is boolean
@@ -39,9 +41,9 @@ if (test.hasErrors()) {
 
 ### Float
 - ```izitFloat.float()``` - is float
+- ```izitFloat.equal(value)``` - is equal to value
 - ```izitFloat.min(value)``` - is greater than value
 - ```izitFloat.max(value)``` - is lower than value
-- ```izitFloat.precision(limit, precision)``` - is lower than limit + precision & greater than limit - precision
 - ```izitFloat.positive()``` - is positive
 - ```izitFloat.negative()``` - is negative
 - ```izitFloat.zero()``` - is equal to zero
@@ -51,16 +53,19 @@ if (test.hasErrors()) {
 
 ### Integer
 - ```izitInteger.integer()``` - is integer
+- ```izitInteger.equal(value)``` - is equal to value
 - ```izitInteger.min(value)``` - is greater than value
 - ```izitInteger.max(value)``` - is lower than value
-- ```izitInteger.precision(limit, precision)``` - is lower than limit + precision & greater than limit - precision
 - ```izitInteger.positive()``` - is positive
 - ```izitInteger.negative()``` - is negative
 - ```izitInteger.zero()``` - is equal to zero
+- ```izitInteger.precision(limit, precision)``` - is valid range
 
 ### Object
 - ```izitObject.object()``` - is object
-- ```izitObject.has(key)``` - object has prop named key
+- ```izitObject.hasprop(key)``` - is include property
+- ```izitObject.haskeyvalue(key, value)``` - is include property with value
+- ```izitObject.equal(value)``` - is equal to value
 
 ### String
 - ```izitString.string()``` - is string
@@ -68,6 +73,11 @@ if (test.hasErrors()) {
 - ```izitString.max(length)``` - is max length
 - ```izitString.notempty()``` - is not empty
 - ```izitString.alphanum()``` - is alphanumeric
+- ```izitString.lowercase()``` - is lowercase
+- ```izitString.uppercase()``` - is uppercase
+- ```izitString.numeric()``` - is numeric string
+- ```izitString.numint()``` - is integer string
+- ```izitString.numfloat()``` - is float string
 - ```izitString.email()``` - is email
 - ```izitString.hostname()``` - is hostname
 - ```izitString.url()``` - is url

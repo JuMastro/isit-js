@@ -1,62 +1,91 @@
 'use strict'
 
-const IzitArray = require('../../lib/types/array')
+const IzitArray = require('../../lib/types/array.js')
 const assert = require('chai').assert
 
-const test = {
+const tests = {
   empty: [],
   simple: ['Is', 'Medium', 'Array', 'Guys', '!'],
+  copy: ['Is', 'Medium', 'Array', 'Guys', '!'],
   medium: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-  string: 'HelloWorld HelloWorld HelloWorld!',
-  object: { id: 'is_id', value: 'is_value', list: ['test', 'test'] },
-  int: 12550,
-  float: 1005.2458
+  class: new Array('testA', 'testB', 42),
+  classCopy: ['testA', 'testB', 42],
+  objArray: [{ a: 'a', b: 'b'}, { c: 'c', d: 'd' }]
 }
 
-describe('Array', () => {
-  it('is array', () => {
-    assert.equal(IzitArray(test.empty).hasErrors(), false)
-    assert.equal(IzitArray(test.simple).hasErrors(), false)
-    assert.equal(IzitArray(test.medium).hasErrors(), false)
-    assert.equal(IzitArray(test.string).hasErrors(), true)
-    assert.equal(IzitArray(test.object).hasErrors(), true)
-    assert.equal(IzitArray(test.int).hasErrors(), true)
-    assert.equal(IzitArray(test.float).hasErrors(), true)
+describe('IzitArray', () => {
+  it('.array()', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.empty).hasErrors())
+    assert.isFalse(IzitArray(tests.simple).hasErrors())
+    assert.isFalse(IzitArray(tests.medium).hasErrors())
+    assert.isFalse(IzitArray(tests.class).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray('HelloWorld!').hasErrors())
+    assert.isTrue(IzitArray({ id: 'is_id', value: 'is_value', list: ['test', 'test'] }).hasErrors())
+    assert.isTrue(IzitArray(12550).hasErrors())
+    assert.isTrue(IzitArray(1005.2458).hasErrors())
   })
 
-  it('is min length', () => {
-    assert.equal(IzitArray(test.empty).min(0).hasErrors(), false)
-    assert.equal(IzitArray(test.empty).min(1).hasErrors(), true)
-    assert.equal(IzitArray(test.simple).min(3).hasErrors(), false)
-    assert.equal(IzitArray(test.string).min(0).hasErrors(), true)
-    assert.equal(IzitArray(test.object).min(1).hasErrors(), true)
-    assert.equal(IzitArray(test.float).min(4).hasErrors(), true)
+  it('.minlength(length)', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.empty).minlength(0).hasErrors())
+    assert.isFalse(IzitArray(tests.medium).minlength(11).hasErrors())
+    assert.isFalse(IzitArray(tests.class).minlength(2).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray(tests.empty).minlength(1).hasErrors())
+    assert.isTrue(IzitArray(tests.medium).minlength(13).hasErrors())
+    assert.isTrue(IzitArray(tests.class).minlength(4).hasErrors())
   })
 
-  it('is max length', () => {
-    assert.equal(IzitArray(test.empty).max(2).hasErrors(), false)
-    assert.equal(IzitArray(test.empty).max(0).hasErrors(), false)
-    assert.equal(IzitArray(test.simple).max(3).hasErrors(), true)
-    assert.equal(IzitArray(test.string).max(10).hasErrors(), true)
-    assert.equal(IzitArray(test.object).max(10).hasErrors(), true)
+  it('.maxlength(length)', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.empty).maxlength(0).hasErrors())
+    assert.isFalse(IzitArray(tests.medium).maxlength(12).hasErrors())
+    assert.isFalse(IzitArray(tests.class).maxlength(3).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray(tests.medium).maxlength(11).hasErrors())
+    assert.isTrue(IzitArray(tests.class).maxlength(2).hasErrors())
   })
 
-  it('is length', () => {
-    assert.equal(IzitArray(test.empty).length(0).hasErrors(), false)
-    assert.equal(IzitArray(test.empty).length(1).hasErrors(), true)
-    assert.equal(IzitArray(test.simple).length(3).hasErrors(), true)
-    assert.equal(IzitArray(test.simple).length(5).hasErrors(), false)
-    assert.equal(IzitArray(test.string).length(10).hasErrors(), true)
-    assert.equal(IzitArray(test.object).length(10).hasErrors(), true)
+  it('.length(length)', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.empty).length(0).hasErrors())
+    assert.isFalse(IzitArray(tests.medium).length(12).hasErrors())
+    assert.isFalse(IzitArray(tests.class).length(3).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray(tests.empty).length(1).hasErrors())
+    assert.isTrue(IzitArray(tests.medium).length(13).hasErrors())
+    assert.isTrue(IzitArray(tests.class).length(1).hasErrors())
   })
 
-  it('is mixed', () => {
-    assert.equal(IzitArray(test.empty).length(0).min(0).max(0).hasErrors(), false)
-    assert.equal(IzitArray(test.empty).length(0).min(1).max(2).hasErrors(), true)
-    assert.equal(IzitArray(test.simple).min(2).max(10).length(5).hasErrors(), false)
-    assert.equal(IzitArray(test.simple).min(0).max(5).hasErrors(), false)
-    assert.equal(IzitArray(test.simple).min(6).max(10).hasErrors(), true)
-    assert.equal(IzitArray(test.string).min(0).max(100).hasErrors(), true)
-    assert.equal(IzitArray(test.object).min(0).max(1000).hasErrors(), true)
+  it('.hasvalue(value)', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.simple).hasvalue('!').hasErrors())
+    assert.isFalse(IzitArray(tests.class).hasvalue(42).hasErrors())
+    assert.isFalse(IzitArray(tests.objArray).hasvalue({ a: 'a', b: 'b' }).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray(tests.simple).hasvalue('!!').hasErrors())
+    assert.isTrue(IzitArray(tests.simple).hasvalue('').hasErrors())
+    assert.isTrue(IzitArray(tests.class).hasvalue('42').hasErrors())
+    assert.isTrue(IzitArray(tests.objArray).hasvalue({ a: 'c', b: 'b' }).hasErrors())
+  })
+
+  it('.equal(egality)', () => {
+    // Valids
+    assert.isFalse(IzitArray(tests.empty).equal([]).hasErrors())
+    assert.isFalse(IzitArray(tests.simple).equal(tests.copy).hasErrors())
+    assert.isFalse(IzitArray(tests.class).equal(tests.classCopy).hasErrors())
+    assert.isFalse(IzitArray(tests.objArray).equal([{ a: 'a', b: 'b' }, { c: 'c', d: 'd' }]).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitArray(tests.empty).equal(['']).hasErrors())
+    assert.isTrue(IzitArray(tests.simple).equal(['!'].concat(tests.simple)).hasErrors())
+    assert.isTrue(IzitArray(tests.class).equal(['testA', 'testB', '42']).hasErrors())
   })
 })
