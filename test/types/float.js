@@ -31,6 +31,7 @@ describe('IzitFloat', () => {
   it('.min(value)', () => {
     // Valids
     assert.isFalse(IzitFloat(floatTypes.float).min(5.2458).hasErrors())
+    assert.isFalse(IzitFloat(floatTypes.float).min(5).hasErrors())
     assert.isFalse(IzitFloat(floatTypes.neg).min(-5.2458).hasErrors())
     assert.isFalse(IzitFloat(floatTypes.long).min(0.004545457644574).hasErrors())
 
@@ -43,6 +44,7 @@ describe('IzitFloat', () => {
   it('.max(value)', () => {
     // Valids
     assert.isFalse(IzitFloat(floatTypes.float).max(5.2458).hasErrors())
+    assert.isFalse(IzitFloat(floatTypes.float).max(6).hasErrors())
     assert.isFalse(IzitFloat(floatTypes.neg).max(-5.2458).hasErrors())
     assert.isFalse(IzitFloat(floatTypes.long).max(0.004545457644574).hasErrors())
 
@@ -50,6 +52,18 @@ describe('IzitFloat', () => {
     assert.isTrue(IzitFloat(floatTypes.neg).max(-6).hasErrors())
     assert.isTrue(IzitFloat(floatTypes.long).max(0.004).hasErrors())
     assert.isTrue(IzitFloat(floatTypes.negLong).max(-1.001).hasErrors())
+  })
+
+  it('.equal(value)', () => {
+    // Valids
+    assert.isFalse(IzitFloat(floatTypes.float).equal(5.2458).hasErrors())
+    assert.isFalse(IzitFloat(floatTypes.neg).equal(-5.2458).hasErrors())
+    assert.isFalse(IzitFloat(floatTypes.long).equal(0.004545457644574).hasErrors())
+
+    // Errors
+    assert.isTrue(IzitFloat(floatTypes.neg).equal(-6).hasErrors())
+    assert.isTrue(IzitFloat(floatTypes.long).equal(0.004).hasErrors())
+    assert.isTrue(IzitFloat(floatTypes.negLong).equal(-1.001).hasErrors())
   })
 
   it('.positive()', () => {

@@ -1,6 +1,6 @@
 {
   "name": "izit-js",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "IzitJS is nodejs micro data validator",
   "author": "JuMastro <mastromonaco.julien@gmail.com>",
   "main": "lib/index.js",

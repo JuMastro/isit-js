@@ -50,16 +50,17 @@ describe('IzitInteger', () => {
     assert.isTrue(IzitInteger(tests.neg).max(-150000).hasErrors())
   })
 
-  it('.precision(limit, range)', () => {
+  it('.equal(equality)', () => {
     // Valids
-    assert.isFalse(IzitInteger(tests.zero).precision(0, 1).hasErrors())
-    assert.isFalse(IzitInteger(tests.int).precision(10000, 10000).hasErrors())
-    assert.isFalse(IzitInteger(tests.neg).precision(-10000, 10000).hasErrors())
+    assert.isFalse(IzitInteger(tests.zero).equal(0).hasErrors())
+    assert.isFalse(IzitInteger(tests.zero).equal(-0).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).equal(12550).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).equal(-12550).hasErrors())
 
     // Errors
-    assert.isTrue(IzitInteger(tests.zero).precision(-10, 1).hasErrors())
-    assert.isTrue(IzitInteger(tests.int).precision(15000, 500).hasErrors())
-    assert.isTrue(IzitInteger(tests.neg).precision(-10000, -5000).hasErrors())
+    assert.isTrue(IzitInteger(tests.int).equal(125501).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).equal(12550).hasErrors())
+    assert.isTrue(IzitInteger(tests.long).equal(0).hasErrors())
   })
 
   it('.positive()', () => {
@@ -94,16 +95,15 @@ describe('IzitInteger', () => {
     assert.isTrue(IzitInteger(tests.long).zero().hasErrors())
   })
 
-  it('.equal(equality)', () => {
+  it('.precision(limit, range)', () => {
     // Valids
-    assert.isFalse(IzitInteger(tests.zero).equal(0).hasErrors())
-    assert.isFalse(IzitInteger(tests.zero).equal(-0).hasErrors())
-    assert.isFalse(IzitInteger(tests.int).equal(12550).hasErrors())
-    assert.isFalse(IzitInteger(tests.neg).equal(-12550).hasErrors())
+    assert.isFalse(IzitInteger(tests.zero).precision(0, 1).hasErrors())
+    assert.isFalse(IzitInteger(tests.int).precision(10000, 10000).hasErrors())
+    assert.isFalse(IzitInteger(tests.neg).precision(-10000, 10000).hasErrors())
 
     // Errors
-    assert.isTrue(IzitInteger(tests.int).equal(125501).hasErrors())
-    assert.isTrue(IzitInteger(tests.neg).equal(12550).hasErrors())
-    assert.isTrue(IzitInteger(tests.long).equal(0).hasErrors())
+    assert.isTrue(IzitInteger(tests.zero).precision(-10, 1).hasErrors())
+    assert.isTrue(IzitInteger(tests.int).precision(15000, 500).hasErrors())
+    assert.isTrue(IzitInteger(tests.neg).precision(-10000, -5000).hasErrors())
   })
 })
